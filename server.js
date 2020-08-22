@@ -427,28 +427,34 @@ const deptRemove = () => {
   })
 }
 
+
 const viewBudget = () => {
   let departmentList = ["Design and Purchasing", "Marketing and Merchandising", "Sales", "HR"];
-
-  inquirer
-    .prompt({
-      name: "dptID",
-      type: "list",
-      message: "choose dpt to see budget",
-      choices: departmentList
-    }).then(function (response) {
-      var dptID = response.dptID;
-      var query = "SELECT department_name, SUM(salary) FROM department LEFT JOIN role ON department.id = role.department_id node INNER JOIN employee ON role.id = employee.role_id GROUP BY ?;"
-      connection.query(query, dptID, function (err, res) {
-        if (err) {
-          console.log(err);
-        }
-        console.table(res);
-        start();
-      });
-    }
-    )
-}
+    inquirer
+      .prompt({
+        name: "dptID",
+        type: "list",
+        message: "Choose a department to see the budget",
+        choices: departmentList
+      }).then(function (response) {
+        var dptID = response.dptID;
+        var query = "SELECT department_name, SUM(salary) FROM department LEFT JOIN role ON department.id = role.department_id INNER JOIN employee ON role.id = employee.role_id GROUP BY ?;"
+        connection.query(query, dptID, function (err, res) {
+          if (err) {
+            console.log(err);
+          }
+          console.table(res);
+          start();
+        });
+      }
+      )
+  }
+  
+  
+  
+  
+  
+  
 
 // const EmployeebyManagerView = () => {
 //   inquirer
