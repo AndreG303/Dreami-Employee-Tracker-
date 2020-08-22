@@ -44,6 +44,7 @@ const start = () => {
         "Remove Employee",
         "Remove Role",
         "Remove Department",
+        "View Budget by Department",
         "Exit",
       ],
     })
@@ -80,8 +81,12 @@ const start = () => {
           roleRemove();
           break;
         case "Remove Department":
-            deptRemove();
+          deptRemove();
           break;
+        case "View Budget by Department":
+          viewBudget();
+          break;
+
         // case "View Employee Managers":
         //   viewemployeebyManager();
         //   break;
@@ -377,69 +382,92 @@ const employeeRemove = () => {
   })
 }
 
-const roleRemove = ()  => {
+const roleRemove = () => {
   query = `SELECT * FROM role`;
   connection.query(query, (err, results) => {
-      if (err) throw err;
+    if (err) throw err;
 
-      inquirer.prompt([
-          {
-              name: 'removeRole',
-              type: 'list',
-              choices: function () {
-                  let choiceArray = results.map(choice => choice.title);
-                  return choiceArray;
-              },
-              message: 'Select a Role to remove:'
-          }
-      ]).then((answer) => {
-          connection.query(`DELETE FROM role WHERE ? `, { title: answer.removeRole });
-          start();
+    inquirer.prompt([
+      {
+        name: 'removeRole',
+        type: 'list',
+        choices: function () {
+          let choiceArray = results.map(choice => choice.title);
+          return choiceArray;
+        },
+        message: 'Select a Role to remove:'
+      }
+    ]).then((answer) => {
+      connection.query(`DELETE FROM role WHERE ? `, { title: answer.removeRole });
+      start();
 
-      })
+    })
 
   })
 }
 const deptRemove = () => {
   query = `SELECT * FROM department`;
   connection.query(query, (err, results) => {
-      if (err) throw err;
+    if (err) throw err;
 
-      inquirer.prompt([
-          {
-              name: 'dept',
-              type: 'list',
-              choices: function () {
-                  let choiceArray = results.map(choice => choice.department_name);
-                  return choiceArray;
-              },
-              message: 'Select the department to remove:'
-          }
-      ]).then((answer) => {
-          connection.query(`DELETE FROM department WHERE ? `, { department_name: answer.dept })
-          start();
-      })
+    inquirer.prompt([
+      {
+        name: 'dept',
+        type: 'list',
+        choices: function () {
+          let choiceArray = results.map(choice => choice.department_name);
+          return choiceArray;
+        },
+        message: 'Select the department to remove:'
+      }
+    ]).then((answer) => {
+      connection.query(`DELETE FROM department WHERE ? `, { department_name: answer.dept })
+      start();
+    })
   })
 }
 
-// function viewemployeebyManager() {
-//   var empManager = managerId
-//   connection.query("SELECT * FROM employee WHERE ?", function (err, res) {
-//     connection.query(query, [manId, empid], function (err, res) {
-//       if (err) {
-//         console.log(err);
-//       }
-//       console.log('updating employee manager');
-//       start();
+const viewBudget = () => {
+  let departmentList = ["Design and Purchasing", "Marketing and Merchandising", "Sales", "HR"];
 
-//       start();
+  inquirer
+    .prompt({
+      name: "dptID",
+      type: "list",
+      message: "choose dpt to see budget",
+      choices: departmentList
+    }).then(function (response) {
+      var dptID = response.dptID;
+      var query = "SELECT department_name, SUM(salary) FROM department LEFT JOIN role ON department.id = role.department_id node INNER JOIN employee ON role.id = employee.role_id GROUP BY ?;"
+      connection.query(query, dptID, function (err, res) {
+        if (err) {
+          console.log(err);
+        }
+        console.table(res);
+        start();
+      });
+    }
+    )
+}
+
+// const EmployeebyManagerView = () => {
+//   inquirer
+//   .prompt({
+//     name: "manID",
+//     type: "input",
+//     message: "Enter manager ID",
+//   }).then (function(response) {
+//     var manID = response.manID;
+//     var query = "SELECT * FROM employee AS manager LEFT JOIN employee AS e ON manager.id = e.manager_id WHERE manager.id = ?";
+//     connection.query(query, manID, function (err, res) {
+//         if (err) {
+//           console.log(err);
+//         }
+//         console.table(res);
+//         start();
 //     });
-//   },
-// }
-
-
-
-
+//   }
+//   )}
 
 
 

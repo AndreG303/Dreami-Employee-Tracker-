@@ -17,12 +17,11 @@ VALUES ("Creative Director", 180000, 1),
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Anna", "Wintour", 1, null),
-        ("Marc", "Jacobs", 1, null),
-        ("Muhammed", "Ali", 1, 1),
-        ("Michael", "Jordan", 1, 1),
-        ("Johnson", "Pham", 1, 1),
-        ("Magic", "Johnson", 3, 1),
-        ("Elon", "Musk", 4, 2),
-        ("Elizabeth", "Lee", 4, 2),
-        ("Bobby", "Sporman", 5, 2),
-        ("Sarah", "Abouelela", 5, 2);  
+        ("Oscar", "De la Renta", 2, null),
+        ("Marc", "Jacobs", 2, null),
+        ("Maria", "caballos", 3, 1),
+        ("Jean Paul", "Gaultier", 3, 1),
+        ("Tom", "Ford", 3, 1),
+        ("Cristobal", "Valenciaga", 3, 2),
+        ("Stefano", "Gabbana", 2, 2),
+        
