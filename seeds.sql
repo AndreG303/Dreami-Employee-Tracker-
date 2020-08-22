@@ -1,5 +1,8 @@
 INSERT INTO department(department_name)
-VALUES ("Design and Purchasing"), ("Marketing and Merchandising"), ("Sales"), ("HR");
+VALUES ("Design and Purchasing"), 
+       ("Marketing and Merchandising"), 
+       ("Sales"), 
+       ("HR");
 
 
 
@@ -10,7 +13,7 @@ VALUES ("Creative Director", 180000, 1),
         ("Fashion Stylist", 45000, 2),
         ("Fashion Designer", 70000, 1),
         ("Buyer", 100000, 1),
-        ("Recrtuiter", 50000,4),
+        ("Recrutiter", 50000,4),
         ("Sales Associate", 45000,3);
         
 
@@ -18,7 +21,7 @@ VALUES ("Creative Director", 180000, 1),
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Anna", "Wintour", 1, null),
         ("Oscar", "De la Renta", 2, null),
-        ("Marc", "Jacobs", 2, null),
+        ("Marc", "Jacobs", 2, 3),
         ("Maria", "caballos", 3, 1),
         ("Jean Paul", "Gaultier", 3, 1),
         ("Tom", "Ford", 3, 1),

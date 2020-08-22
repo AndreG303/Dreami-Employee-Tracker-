@@ -1,5 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var table = require('console.table');
+
 
 // create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -40,11 +42,11 @@ const start = () => {
         "Add Role",
         "Update Employee Role",
         "Update Employee Managers",
-        "View Employee Managers",
         "Remove Employee",
         "Remove Role",
         "Remove Department",
         "View Budget by Department",
+        "View Employee by Manager",
         "Exit",
       ],
     })
@@ -83,13 +85,12 @@ const start = () => {
         case "Remove Department":
           deptRemove();
           break;
+        case "View Employee by Manager":
+          EmployeebyManagerView();
+          break;
         case "View Budget by Department":
           viewBudget();
           break;
-
-        // case "View Employee Managers":
-        //   viewemployeebyManager();
-        //   break;
         case "Exit":
           exit();
           break;
@@ -132,14 +133,16 @@ function roleView() {
   });
 }
 
-function addEmployee() {
+const addEmployee = () => {
   //empty array to push inputs inside of
   let employeeList = [];
   let employeeIdList = [];
+  let roleList =["Creative Director", "Client Strategist", "Advertising Manager", "Fashion Stylist", "Fashion Designer","Buyer","Recrutiter","Sales Associate"];
   //empty array to push inputs inside of
   let managerList = [];
   let managerIdList = [];
-  connection.query("SELECT * FROM employee_tracker_db.role", function (
+  let roleIdList = [];
+  connection.query("SELECT * FROM Employees_DB.role", function (
     err,
     res
   ) {
@@ -148,7 +151,7 @@ function addEmployee() {
       employeeList.push(res[i].title);
       employeeIdList.push(res[i].id.toString());
     }
-    connection.query("SELECT * FROM employee_tracker_db.employee", function (
+    connection.query("SELECT * FROM Employees_DB.employee", function (
       err,
       res
     ) {
@@ -209,7 +212,7 @@ function addDepartment() {
   let departmentList = [];
   let departmentIdList = [];
 
-  connection.query("SELECT * FROM employee_tracker_db.department", function (
+  connection.query("SELECT * FROM Employees_DB.department", function (
     err,
     res
   ) {
@@ -355,7 +358,7 @@ function updateEmployeeManager() {
             if (err) {
               console.log(err);
             }
-            console.log('updating employee manager');
+            console.log('employee manager updated');
             start();
 
           });
@@ -427,53 +430,47 @@ const deptRemove = () => {
   })
 }
 
-
 const viewBudget = () => {
   let departmentList = ["Design and Purchasing", "Marketing and Merchandising", "Sales", "HR"];
-    inquirer
-      .prompt({
-        name: "dptID",
-        type: "list",
-        message: "Choose a department to see the budget",
-        choices: departmentList
-      }).then(function (response) {
-        var dptID = response.dptID;
-        var query = "SELECT department_name, SUM(salary) FROM department LEFT JOIN role ON department.id = role.department_id INNER JOIN employee ON role.id = employee.role_id GROUP BY ?;"
-        connection.query(query, dptID, function (err, res) {
-          if (err) {
-            console.log(err);
-          }
-          console.table(res);
-          start();
-        });
-      }
-      )
-  }
-  
-  
-  
-  
-  
-  
+  inquirer
+    .prompt({
+      name: "dptID",
+      type: "list",
+      message: "Choose a department to see the budget",
+      choices: departmentList
+    }).then(function (response) {
+      var dptID = response.dptID;
+      var query = "SELECT department_name, SUM(salary) FROM department LEFT JOIN role ON department.id = role.department_id INNER JOIN employee ON role.id = employee.role_id GROUP BY ?;"
+      connection.query(query, dptID, function (err, res) {
+        if (err) {
+          console.log(err);
+        }
+        console.table(res);
+        start();
+      });
+    }
+    )
+}
 
-// const EmployeebyManagerView = () => {
-//   inquirer
-//   .prompt({
-//     name: "manID",
-//     type: "input",
-//     message: "Enter manager ID",
-//   }).then (function(response) {
-//     var manID = response.manID;
-//     var query = "SELECT * FROM employee AS manager LEFT JOIN employee AS e ON manager.id = e.manager_id WHERE manager.id = ?";
-//     connection.query(query, manID, function (err, res) {
-//         if (err) {
-//           console.log(err);
-//         }
-//         console.table(res);
-//         start();
-//     });
-//   }
-//   )}
+const EmployeebyManagerView = () => {
+  inquirer
+    .prompt({
+      name: "manID",
+      type: "input",
+      message: "Enter manager ID",
+    }).then(function (response) {
+      var manID = response.manID;
+      var query = "SELECT * FROM employee AS manager LEFT JOIN employee AS e ON manager.id = e.manager_id WHERE manager.id = ?";
+      connection.query(query, manID, function (err, res) {
+        if (err) {
+          console.log(err);
+        }
+        console.table(res);
+        start();
+      });
+    }
+    )
+}
 
 
 
