@@ -2,7 +2,7 @@
 
 Developers are often tasked with creating interfaces that make it easy for non-developers to view and interact with information stored in databases. Often these interfaces are known as **C**ontent **M**anagement **S**ystems. I built a solution for managing a company's employees using node, inquirer, and MySQL.
 
-![Screen Shot 2020-08-22 at 10 58 01 PM](https://user-images.githubusercontent.com/65183415/90969826-247eb880-e4cb-11ea-9b17-c5639d1673ad.png)
+![Screen Shot 2020-08-22 at 11 14 05 PM](https://user-images.githubusercontent.com/65183415/90969981-395c4b80-e4cd-11ea-8c7a-e648d1f1bdc9.png)
 
 Video Link:https://drive.google.com/file/d/1j_SA3K6_CXdxoSWqWyN5S0sMHVBkvVQL/view
 
