@@ -25,8 +25,16 @@ connection.connect(function (err) {
   start();
 });
 
+
+console.log("\n");
+console.log('  -------------------------------');
+console.log('===================================');
+console.log('  FASHION HOUSE EMPLOYEE TRACKER ');
+console.log('===================================');
+console.log('  -------------------------------');
+console.log("\n");
+
 // function which prompts the user for what action they should take
-// Create a switch case
 const start = () => {
   inquirer
     .prompt({
@@ -50,6 +58,7 @@ const start = () => {
         "Exit",
       ],
     })
+    // Create a switch case
     .then(function (answer) {
       switch (answer.menu) {
         case "View All Employees":
@@ -98,13 +107,7 @@ const start = () => {
     });
 };
 
-// ------------------------------------
-//            FUNCTIONS
-//  -----------------------------------
-
-// Function that SELECTS ALL FROM role in our schema.sql/mysql workbench.
-// Connection.query helps us to connect the query
-// This will go for all of the functions created
+// Functions to view departments, roles, employees
 function employeeView() {
   connection.query("SELECT * FROM employee", function (err, res) {
     if (err) throw err;
@@ -132,13 +135,11 @@ function roleView() {
     start();
   });
 }
-
+// Function to Add departments, roles, employees
 const addEmployee = () => {
-  //empty array to push inputs inside of
+  // input goes in the empty array
   let employeeList = [];
   let employeeIdList = [];
-  let roleList =["Creative Director", "Client Strategist", "Advertising Manager", "Fashion Stylist", "Fashion Designer","Buyer","Recrutiter","Sales Associate"];
-  //empty array to push inputs inside of
   let managerList = [];
   let managerIdList = [];
   let roleIdList = [];
@@ -146,10 +147,11 @@ const addEmployee = () => {
     err,
     res
   ) {
-    if (err) throw err;
+    if (err) console.log(err);
     for (var i = 0; i < res.length; i++) {
       employeeList.push(res[i].title);
       employeeIdList.push(res[i].id.toString());
+      roleIdList.push(res[i].role_id);
     }
     connection.query("SELECT * FROM Employees_DB.employee", function (
       err,
@@ -160,7 +162,7 @@ const addEmployee = () => {
         managerList.push(res[i].first_name + " " + res[i].last_name);
         managerIdList.push(res[i].id.toString());
       }
-      // Build out the inquirer prompt to add employee's first name and last name
+      // Ask for employee info 
       inquirer
         .prompt([
           {
@@ -174,10 +176,9 @@ const addEmployee = () => {
             message: "What is the Employee's last name?",
           },
           {
-            type: "list",
+            type: "Input",
             name: "role",
             message: "What is the Employee's Role ID?",
-            choices: roleList,
           },
           {
             type: "list",
@@ -192,7 +193,7 @@ const addEmployee = () => {
             [
               val.firstName,
               val.lastName,
-              roleIdList[roleList.indexOf(val.role)],
+              val.role,
               managerIdList[managerList.indexOf(val.managerId)],
             ],
             function (err, res) {
@@ -221,7 +222,7 @@ function addDepartment() {
       departmentList.push(res[i].name);
       departmentIdList.push(res[i].id.toString());
     }
-
+    // Ask for department Name
     inquirer
       .prompt([
         {
@@ -234,7 +235,7 @@ function addDepartment() {
         connection.query(
           "INSERT INTO department SET ?",
           {
-            name: val.department,
+            department_name: val.department,
           },
           function (err, res) {
             if (err) throw err;
@@ -267,7 +268,7 @@ function addRole() {
       salaryList.push(res[i].salary);
       deptIdList.push(res[i].department_id)
     }
-
+    // Ask for role info
     inquirer
       .prompt([
         {
@@ -288,11 +289,7 @@ function addRole() {
       ])
       .then((val) => {
         connection.query(
-          "INSERT INTO role SET ?",
-          {
-            title: val.title,
-          },
-          function (err, res) {
+          "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [val.title, val.salary, val.deptId], function (err, res) {
             if (err) throw err;
             console.log("\n");
             console.log("successfully added Role");
@@ -304,8 +301,7 @@ function addRole() {
   }
   );
 }
-
-
+// Function to Update employee roles
 function updateEmployeeRole() {
 
   inquirer
@@ -329,13 +325,13 @@ function updateEmployeeRole() {
             if (err) {
               console.log(err);
             }
-            console.log('updating employee role');
+            console.log('updated employee role');
             start();
           });
         });
     });
 }
-
+// Function to Update employee Manager
 function updateEmployeeManager() {
   inquirer
     .prompt({
@@ -358,7 +354,7 @@ function updateEmployeeManager() {
             if (err) {
               console.log(err);
             }
-            console.log('employee manager updated');
+            console.log('Employee Manager Updated');
             start();
 
           });
@@ -366,7 +362,7 @@ function updateEmployeeManager() {
     });
 
 }
-
+// Function to Remove employees, departments and roles
 const employeeRemove = () => {
   connection.query("SELECT employee.first_name, employee.last_name FROM employee", (err, results) => {
     if (err) throw err;
@@ -429,7 +425,7 @@ const deptRemove = () => {
     })
   })
 }
-
+// View Department Budget 
 const viewBudget = () => {
   let departmentList = ["Design and Purchasing", "Marketing and Merchandising", "Sales", "HR"];
   inquirer
@@ -451,7 +447,7 @@ const viewBudget = () => {
     }
     )
 }
-
+// View employees by manager
 const EmployeebyManagerView = () => {
   inquirer
     .prompt({
@@ -471,8 +467,6 @@ const EmployeebyManagerView = () => {
     }
     )
 }
-
-
 
 function exit() {
   connection.end();
