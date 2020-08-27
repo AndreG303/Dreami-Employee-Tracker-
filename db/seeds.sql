@@ -2,7 +2,7 @@ INSERT INTO department(department_name)
 VALUES ("Design"),
        ("Purchasing"), 
        ("Marketing"),
-       ("Production")
+       ("Production"),
        ("Merchandising"), 
        ("Sales"), 
        ("Finance"),
@@ -38,6 +38,6 @@ VALUES ("Anna", "Wintour", 1, null),
         ("Naomi", "Campbell", 11, 4),
         ("Vera", "Wang", 7, 1),
         ("Cara", "Delevingne", 4, 1),
-        ("Gianni", "versace", 8, 2)
+        ("Gianni", "versace", 8, 2);
 
         
